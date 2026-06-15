@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="ItemMapper">
+
+    <select id="getAllItems">
+        <![CDATA[
+        SELECT *
+          FROM item
+        ]]>
+    </select>
+
+    <select id="getItemByNodeId">
+        <![CDATA[
+        SELECT *
+          FROM item
+         WHERE node_id = :node_id
+        ]]>
+    </select>
+
+</mapper>

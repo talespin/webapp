@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>수플러 MVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --bg: #f8f8f6;
+      --card: #ffffff;
+      --text: #171717;
+      --muted: #8a8f98;
+      --line: #ededed;
+      --soft: #f1f2f4;
+      --dark: #111111;
+      --blue: #6478ff;
+      --blue-soft: #eef1ff;
+      --red: #ef4444;
+      --red-soft: #fff1f1;
+      --green: #22c55e;
+      --green-soft: #ecfdf3;
+      --yellow: #f59e0b;
+      --yellow-soft: #fff8e8;
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --shadow: 0 18px 45px rgba(20, 20, 20, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+    }
+
+    .phone-shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 26px 22px 48px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dbeafe, #f5d0fe);
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.7px;
+    }
+
+    .brand-sub {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .top-icons {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .circle-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 0;
+      background: white;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .hero {
+      background: var(--card);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .hero-row {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .readiness {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .score-ring {
+      width: 124px;
+      height: 124px;
+      border-radius: 50%;
+      background: conic-gradient(var(--blue) 0deg, var(--blue) 195deg, var(--soft) 195deg 360deg);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+
+    .score-inner {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: white;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .h1 {
+      font-size: 31px;
+      line-height: 1.2;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: var(--soft);
+      color: #555;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .pill.blue {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .pill.red {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .pill.green {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .pill.yellow {
+      background: var(--yellow-soft);
+      color: #c27803;
+    }
+
+    .mini-card {
+      background: #fafafa;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+    }
+
+    .mini-title {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .metric {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.5px;
+    }
+
+    .sub-btn {
+      border: 0;
+      background: var(--soft);
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .item {
+      background: #fbfbfb;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+
+    .item-title {
+      font-weight: 900;
+      line-height: 1.45;
+      margin: 8px 0;
+      font-size: 16px;
+    }
+
+    .question {
+      color: #3f4652;
+      line-height: 1.9;
+      word-break: keep-all;
+      font-size: 15px;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .primary {
+      border: 0;
+      background: var(--dark);
+      color: white;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .secondary {
+      border: 0;
+      background: var(--soft);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .activity-grid {
+      display: grid;
+      grid-template-columns: repeat(14, 24px);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .cell {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: #e6e7e9;
+    }
+
+    .i1 { background: #c7f8d6; }
+    .i2 { background: #86efac; }
+    .i3 { background: #22c55e; }
+    .i4 { background: #111111; }
+
+    .tab-section {
+      display: none;
+    }
+
+    .tab-section.active {
+      display: block;
+    }
+
+    .top-nav {
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      width: 100%;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      padding: 8px;
+      margin: 0 0 22px;
+    }
+
+    .nav-btn {
+      border: 0;
+      background: transparent;
+      border-radius: 999px;
+      padding: 10px 6px;
+      font-weight: 900;
+      color: #a0a4ac;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .nav-btn.active {
+      background: var(--dark);
+      color: white;
+    }
+
+    .choice {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 16px;
+      padding: 13px 14px;
+      margin-bottom: 9px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .choice.selected {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .map-year {
+      margin-bottom: 26px;
+    }
+
+    .map-grid {
+      display: grid;
+      grid-template-columns: repeat(11, 1fr);
+      gap: 10px;
+    }
+
+    .qdot {
+      aspect-ratio: 1;
+      border-radius: 17px;
+      display: grid;
+      place-items: center;
+      background: #eeeeee;
+      cursor: pointer;
+      font-weight: 900;
+      color: #6b7280;
+      position: relative;
+    }
+
+    .qdot.correct {
+      background: #111;
+      color: white;
+    }
+
+    .qdot.wrong {
+      background: var(--red);
+      color: white;
+    }
+
+    .qdot.unsolved {
+      background: #e6e7e9;
+      color: #777;
+    }
+
+    .growth-bars {
+      display: grid;
+      gap: 14px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 92px 1fr 64px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .bar-bg {
+      height: 12px;
+      background: var(--soft);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 999px;
+    }
+
+    pre {
+      background: #111;
+      color: #f5f5f5;
+      padding: 20px;
+      border-radius: 22px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .error {
+      display: none;
+      background: var(--red-soft);
+      color: var(--red);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 18px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 780px) {
+      .phone-shell {
+        padding: 20px 16px 48px;
+      }
+
+      .hero-row, .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .readiness {
+        align-items: flex-start;
+      }
+
+      .score-ring {
+        width: 108px;
+        height: 108px;
+      }
+
+      .score-inner {
+        width: 82px;
+        height: 82px;
+        font-size: 26px;
+      }
+
+      .activity-grid {
+        grid-template-columns: repeat(7, 24px);
+      }
+
+      .top-nav {
+        grid-template-columns: repeat(3, 1fr);
+        border-radius: 24px;
+      }
+
+      .map-grid {
+        grid-template-columns: repeat(7, 1fr);
+      }
+    }
+  
+    .roadmap-board {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(180px, 1fr));
+      gap: 18px;
+      align-items: stretch;
+      overflow-x: auto;
+      padding: 8px 4px 18px;
+    }
+
+    .phase-card {
+      min-width: 180px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 18px 16px;
+      position: relative;
+      box-shadow: 0 12px 28px rgba(20, 20, 20, 0.05);
+    }
+
+    .phase-card::after {
+      content: "→";
+      position: absolute;
+      right: -16px;
+      top: 36px;
+      color: #c7c9ce;
+      font-weight: 900;
+      font-size: 22px;
+      z-index: 2;
+    }
+
+    .phase-card:last-child::after {
+      content: "";
+    }
+
+    .phase-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .phase-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 18px;
+      flex: 0 0 auto;
+    }
+
+    .phase-week {
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--muted);
+    }
+
+    .phase-title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-top: 2px;
+      line-height: 1.25;
+    }
+
+    .phase-goal {
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.55;
+      min-height: 58px;
+      margin-bottom: 14px;
+    }
+
+    .phase-line {
+      width: 2px;
+      height: 18px;
+      background: #d8dbe2;
+      margin: 8px auto;
+    }
+
+    .phase-question {
+      background: #f8f8f7;
+      border-radius: 18px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #eeeeee;
+    }
+
+    .phase-question-title {
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .phase-question-text {
+      color: #555;
+      font-size: 12px;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .phase-empty {
+      background: #f8f8f7;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      border-radius: 18px;
+      padding: 14px;
+      text-align: center;
+      border: 1px dashed #d9dce2;
+    }
+
+    .roadmap-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .roadmap-summary-card {
+      background: #f8f8f7;
+      border-radius: 20px;
+      padding: 16px;
+      border: 1px solid var(--line);
+    }
+
+    .roadmap-summary-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .roadmap-summary-card .value {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    @media (max-width: 980px) {
+      .roadmap-board {
+        grid-template-columns: repeat(6, 210px);
+      }
+
+      .roadmap-summary {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  
+    .difficulty-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      border: 1px solid transparent;
+      text-transform: uppercase;
+    }
+
+    .difficulty-easy {
+      background: #ecfdf3;
+      color: #027a48;
+      border-color: #abefc6;
+    }
+
+    .difficulty-medium {
+      background: #eff6ff;
+      color: #175cd3;
+      border-color: #b2ddff;
+    }
+
+    .difficulty-hard {
+      background: #fff7ed;
+      color: #c2410c;
+      border-color: #fdba74;
+    }
+
+    .difficulty-killer {
+      background: #fef2f2;
+      color: #b42318;
+      border-color: #fda29b;
+    }
+
+    .phase-question.compact {
+      background: #fafaf9;
+      border-radius: 18px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #ececec;
+    }
+
+    .phase-question-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .phase-question-meta {
+      font-size: 12px;
+      color: #667085;
+      font-weight: 700;
+    }
+
+    .phase-question-title.compact {
+      font-size: 13px;
+      font-weight: 900;
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .phase-question-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+    }
+
+  
+    .todo-calendar {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+
+    .todo-day-name {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      padding: 8px 0;
+    }
+
+    .todo-day {
+      min-height: 84px;
+      background: #fbfbfb;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 10px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .todo-day:hover {
+      border-color: #c7d2fe;
+      background: #f8f9ff;
+    }
+
+    .todo-day.selected {
+      border-color: var(--dark);
+      background: #fff;
+      box-shadow: 0 10px 25px rgba(20, 20, 20, 0.08);
+    }
+
+    .todo-day.empty {
+      opacity: 0.25;
+      cursor: default;
+    }
+
+    .todo-day-num {
+      font-weight: 900;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .todo-dots {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .todo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .todo-dot.done {
+      background: var(--green);
+    }
+
+    .todo-day-progress {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      height: 5px;
+      background: #ececec;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .todo-day-progress > div {
+      height: 100%;
+      background: var(--dark);
+      border-radius: 999px;
+    }
+
+    .todo-item {
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      gap: 12px;
+      align-items: start;
+      background: #fbfbfb;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    .todo-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #d1d5db;
+      background: white;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: white;
+    }
+
+    .todo-check.done {
+      background: var(--dark);
+      border-color: var(--dark);
+    }
+
+    .todo-title {
+      font-weight: 900;
+      line-height: 1.45;
+    }
+
+    .todo-desc {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      margin-top: 4px;
+    }
+
+    .todo-category {
+      font-size: 11px;
+      font-weight: 900;
+      border-radius: 999px;
+      padding: 5px 8px;
+      background: var(--soft);
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .todo-category.review {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .todo-category.solve {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    @media (max-width: 780px) {
+      .todo-day {
+        min-height: 64px;
+        border-radius: 16px;
+        padding: 8px;
+      }
+
+      .todo-calendar {
+        gap: 7px;
+      }
+
+      .todo-item {
+        grid-template-columns: 32px 1fr;
+      }
+
+      .todo-category {
+        grid-column: 2;
+        width: fit-content;
+      }
+    }
+
+  
+    .todo-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.18);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .todo-modal {
+      width: min(520px, 100%);
+      background: white;
+      border-radius: 30px;
+      padding: 24px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.16);
+    }
+
+    .todo-modal-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .todo-modal-sub {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .todo-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fafafa;
+      border-radius: 20px;
+      padding: 15px 16px;
+      font-size: 16px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    .todo-input:focus {
+      border-color: var(--dark);
+      background: white;
+    }
+
+    .subject-picker {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 12px 0 18px;
+    }
+
+    .subject-option {
+      border: 1px solid var(--line);
+      background: #fafafa;
+      border-radius: 18px;
+      padding: 11px 8px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #737780;
+    }
+
+    .subject-option.active {
+      border-color: var(--dark);
+      color: var(--dark);
+      background: white;
+      box-shadow: 0 8px 20px rgba(20, 20, 20, 0.08);
+    }
+
+    .todo-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .todo-category.math {
+      background: #eef1ff;
+      color: #4157d8;
+    }
+
+    .todo-category.korean {
+      background: #fff1f3;
+      color: #c01048;
+    }
+
+    .todo-category.english {
+      background: #ecfdf3;
+      color: #027a48;
+    }
+
+    .todo-category.study {
+      background: #f4f4f5;
+      color: #52525b;
+    }
+
+    .todo-day.math-day {
+      background: #f8f9ff;
+    }
+
+    .todo-day.korean-day {
+      background: #fff8fa;
+    }
+
+    .todo-day.english-day {
+      background: #f6fef9;
+    }
+
+    .todo-dot.math {
+      background: #6478ff;
+    }
+
+    .todo-dot.korean {
+      background: #f43f5e;
+    }
+
+    .todo-dot.english {
+      background: #22c55e;
+    }
+
+    .todo-dot.study {
+      background: #71717a;
+    }
+
+    @media (max-width: 780px) {
+      .subject-picker {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="phone-shell">
+    <div class="top">
+      <div class="brand">
+        <div class="avatar">📘</div>
+        <div>
+          <div class="brand-title">수플러</div>
+          <div class="brand-sub" id="studentName">개인화 수능 학습 플래너</div>
+        </div>
+      </div>
+      <div class="top-icons">
+        <button class="circle-btn" onclick="refreshAll()">↻</button>
+        <button class="circle-btn" onclick="showTab('raw')">☰</button>
+      </div>
+    </div>
+
+    <nav class="top-nav">
+    <button class="nav-btn active" data-tab="home" onclick="showTab('home')">홈</button>
+    <button class="nav-btn" data-tab="solve" onclick="showTab('solve')">문제</button>
+    <button class="nav-btn" data-tab="review" onclick="showTab('review')">복습</button>
+    <button class="nav-btn" data-tab="roadmap" onclick="showTab('roadmap')">로드맵</button>
+    <button class="nav-btn" data-tab="map" onclick="showTab('map')">기출맵</button>
+    <button class="nav-btn" data-tab="activity" onclick="showTab('activity')">성장</button>
+    <button class="nav-btn" data-tab="todo" onclick="showTab('todo')">투두</button>
+  </nav>
+
+    <div id="errorBox" class="error"></div>
+
+    <section id="tab-home" class="tab-section active">
+      <div class="hero">
+        <div class="hero-row">
+          <div class="readiness">
+            <div class="score-ring" id="scoreRing">
+              <div class="score-inner" id="readinessScore">-</div>
+            </div>
+            <div>
+              <div class="h1">오늘의 학습 상태</div>
+              <div class="muted" id="interpretation">불러오는 중...</div>
+              <div class="pill-row">
+                <span class="pill blue" id="gradeRange">-</span>
+                <span class="pill" id="percentileRange">-</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini-card">
+            <div class="mini-title">풀이 현황</div>
+            <div class="metric" id="solvedSummary">-</div>
+            <div class="muted" id="accuracySummary">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="section-title">
+            <h2>학습 잔디</h2>
+            <button class="sub-btn" onclick="showTab('activity')">보기</button>
+          </div>
+          <div class="muted" id="activitySummary">-</div>
+          <div class="activity-grid" id="activityGridMini"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">
+            <h2>오늘 복습</h2>
+            <button class="sub-btn" onclick="showTab('review')">보기</button>
+          </div>
+          <div id="reviewHome"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2>약점 개념</h2>
+        </div>
+        <div id="weakConcepts"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2>추천 문제</h2>
+          <button class="sub-btn" onclick="showTab('solve')">풀러가기</button>
+        </div>
+        <div id="recommendationsHome"></div>
+      </div>
+    </section>
+
+    <section id="tab-solve" class="tab-section">
+      <div class="card">
+        <div class="section-title">
+          <h2>문제 풀이</h2>
+          <button class="sub-btn" onclick="loadDiagnostic()">진단 테스트</button>
+        </div>
+        <div id="problemList"></div>
+      </div>
+
+      <div class="card" id="solvePanel" style="display:none;">
+        <div class="section-title">
+          <h2 id="solveTitle">문제</h2>
+          <button class="sub-btn" onclick="closeSolvePanel()">닫기</button>
+        </div>
+        <div class="question" id="solveQuestion"></div>
+        <div id="solveChoices" style="margin-top:18px;"></div>
+        <input id="shortAnswerInput" class="input" style="display:none; margin-top:14px;" placeholder="답을 입력하세요" />
+        <div class="action-row">
+          <button class="primary" onclick="submitAnswer()">제출하기</button>
+        </div>
+        <div id="solveResult" style="margin-top:14px;"></div>
+      </div>
+    </section>
+
+    <section id="tab-review" class="tab-section">
+      <div class="card">
+        <div class="section-title">
+          <h2>오늘 복습</h2>
+        </div>
+        <div id="reviewFull"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2>오답노트</h2>
+        </div>
+        <div id="wrongNotes"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2>틀렸던 문제 다시 보기</h2>
+        </div>
+        <div id="resolvedWrongNotes"></div>
+      </div>
+    </section>
+
+    <section id="tab-roadmap" class="tab-section">
+      <div class="card">
+        <div class="section-title">
+          <h2>6주 학습 로드맵</h2>
+          <button class="sub-btn" onclick="loadRoadmap()">다시 생성</button>
+        </div>
+        <div id="roadmapList"></div>
+      </div>
+    </section>
+
+    <section id="tab-map" class="tab-section">
+      <div class="card">
+        <div class="section-title">
+          <h2>기출맵 O/X/△</h2>
+          <button class="sub-btn" onclick="loadQuestionMap()">새로고침</button>
+        </div>
+        <div class="muted" style="margin-bottom:16px;">O = 맞힘, X = 틀림, △ = 아직 안 풂</div>
+        <div id="questionMap"></div>
+      </div>
+    </section>
+
+    <section id="tab-activity" class="tab-section">
+      <div class="card">
+        <div class="section-title">
+          <h2>학습 성장</h2>
+          <button class="sub-btn" onclick="loadGrowthCurve()">새로고침</button>
+        </div>
+        <div id="growthCurve"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2>학습 잔디</h2>
+        </div>
+        <div class="muted" id="activityDetail">-</div>
+        <div class="activity-grid" id="activityGridFull"></div>
+      </div>
+    </section>
+
+
+    <section id="tab-todo" class="tab-section">
+      <div class="card">
+        <div class="section-title">
+          <h2>학습 캘린더</h2>
+          <button class="sub-btn" onclick="generateTodosFromPlan()">추천 문제 불러오기</button>
+        </div>
+        <div class="muted" id="todoMonthLabel">-</div>
+        <div class="todo-calendar" id="todoCalendar"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2 id="todoSelectedDateTitle">오늘 할 일</h2>
+          <button class="sub-btn" onclick="createQuickTodo()">+ 할 일 추가</button>
+        </div>
+        <div id="todoList"></div>
+      </div>
+    </section>
+
+
+    <section id="tab-raw" class="tab-section">
+      <div class="card">
+        <div class="section-title">
+          <h2>Raw API</h2>
+        </div>
+        <pre id="rawApi">-</pre>
+      </div>
+    </section>
+  </div>
+
+  
+
+  <script>
+    const studentId = 1;
+    let homeData = null;
+    let activityData = null;
+    let selectedQuestion = null;
+    let selectedAnswer = null;
+
+    function el(id) {
+      return document.getElementById(id);
+    }
+
+    function showError(message) {
+      el("errorBox").style.display = "block";
+      el("errorBox").textContent = message;
+      console.error(message);
+    }
+
+    function clearError() {
+      el("errorBox").style.display = "none";
+      el("errorBox").textContent = "";
+    }
+
+    async function fetchJson(url, options) {
+      const res = await fetch(url, options);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`${url} failed: ${res.status} ${text}`);
+      }
+      return await res.json();
+    }
+
+    function showTab(name) {
+      document.querySelectorAll(".tab-section").forEach(x => x.classList.remove("active"));
+      document.querySelectorAll(".nav-btn").forEach(x => x.classList.remove("active"));
+
+      el(`tab-${name}`).classList.add("active");
+
+      const btn = document.querySelector(`.nav-btn[data-tab="${name}"]`);
+      if (btn) btn.classList.add("active");
+
+      if (name === "review") {
+        loadReviewDue();
+        loadWrongNotes();
+      }
+      if (name === "roadmap") loadRoadmap();
+      if (name === "map") loadQuestionMap();
+      if (name === "activity") {
+        loadActivityGrid();
+        loadGrowthCurve();
+      }
+      if (name === "solve") renderProblemList();
+      if (name === "todo") loadTodoCalendar();
+    }
+
+
+    function difficultyClass(level) {
+      const v = String(level || "").toLowerCase();
+      if (v === "easy") return "difficulty-easy";
+      if (v === "medium") return "difficulty-medium";
+      if (v === "hard") return "difficulty-hard";
+      if (v === "killer") return "difficulty-killer";
+      return "difficulty-medium";
+    }
+
+    function escapeHtml(value) {
+      if (value === null || value === undefined) return "";
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatPercent(v) {
+      if (v === null || v === undefined) return "-";
+      return `${Math.round(v * 100)}%`;
+    }
+
+    function mathText(text) {
+      let s = escapeHtml(text);
+      if (s.includes("\\(") || s.includes("\\[") || s.includes("$$")) return s;
+
+      s = s.replace(/([A-Za-z0-9\)])\^\((-?[A-Za-z0-9+\-\/]+)\)/g, "\\($1^{$2}\\)");
+      s = s.replace(/([A-Za-z0-9\)])\^(-?[A-Za-z0-9]+)/g, "\\($1^{$2}\\)");
+      s = s.replace(/log_([A-Za-z0-9]+)/g, "\\(\\log_{$1}\\)");
+      s = s.replace(/√([0-9]+)/g, "\\(\\sqrt{$1}\\)");
+      s = s.replaceAll("×", "\\(\\times\\)");
+      s = s.replaceAll("π", "\\(\\pi\\)");
+      s = s.replaceAll("θ", "\\(\\theta\\)");
+      s = s.replaceAll("≤", "\\(\\le\\)");
+      s = s.replaceAll("≥", "\\(\\ge\\)");
+      return s;
+    }
+
+    function typeset() {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function questionCard(q, opts = {}) {
+      const red = opts.red ? " red" : "";
+      const reason = q.recommendation_reason || q.review_reason || q.reason || "";
+
+      const answerBadge = (
+        q.answer === null ||
+        q.answer === undefined ||
+        q.answer === ""
+      ) ? '<span class="pill yellow">정답 미등록</span>' : '';
+
+      return `
+        <div class="item">
+          <span class="pill${red}">${escapeHtml(q.difficulty_label || q.review_stage || "문제")}</span>
+          ${q.score ? `<span class="pill">${q.score}점</span>` : ""}
+          ${answerBadge}
+          <div class="item-title">${q.exam_year || ""} 수능 ${q.question_number}번</div>
+          <div class="question">${mathText(q.question_text)}</div>
+          ${reason ? `<div class="muted" style="margin-top:8px;">${escapeHtml(reason)}</div>` : ""}
+          <div class="action-row">
+            <button class="primary" onclick="openSolvePanel(${q.question_id})">풀기</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function reviewCard(q) {
+      return `
+        <div class="item">
+          <span class="pill red">${escapeHtml(q.review_stage || "오답")}</span>
+          <div class="item-title">${q.exam_year || ""} 수능 ${q.question_number}번</div>
+          <div class="question">${mathText(q.question_text)}</div>
+          <div class="muted" style="margin-top:8px;">내 답: ${escapeHtml(q.selected_answer)} · 정답: ${escapeHtml(q.answer)}</div>
+          <div class="muted">${escapeHtml(q.review_reason || q.review_reason)}</div>
+          <div class="action-row">
+            <button class="primary" onclick="openSolvePanel(${q.question_id})">다시 풀기</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderActivity(target, days) {
+      const box = el(target);
+      box.innerHTML = "";
+      [...days].reverse().forEach(day => {
+        const d = document.createElement("div");
+        d.className = `cell i${day.intensity}`;
+        d.title = `${day.date}: ${day.solved_count}문제`;
+        box.appendChild(d);
+      });
+    }
+
+    async function loadHome() {
+      clearError();
+      homeData = await fetchJson(`/students/${studentId}/home`);
+
+      el("studentName").textContent = `${homeData.student_name} · 목표 2등급`;
+      el("readinessScore").textContent = homeData.readiness_score;
+      el("scoreRing").style.background =
+        `conic-gradient(var(--blue) 0deg, var(--blue) ${Math.round(homeData.readiness_score * 3.6)}deg, var(--soft) ${Math.round(homeData.readiness_score * 3.6)}deg 360deg)`;
+
+      el("interpretation").textContent = homeData.interpretation;
+      el("gradeRange").textContent = homeData.estimated_grade_range;
+      el("percentileRange").textContent = homeData.estimated_percentile_range;
+      el("solvedSummary").textContent = `${homeData.correct_count} / ${homeData.solved_count} 정답`;
+      el("accuracySummary").textContent = `정답률 ${formatPercent(homeData.recent_accuracy)} · mastery 평균 ${formatPercent(homeData.concept_mastery_avg)}`;
+
+      el("activitySummary").textContent =
+        `최근 ${homeData.activity_summary.days}일 · ${homeData.activity_summary.total_solved}문제 · ${homeData.activity_summary.current_streak}일 streak`;
+
+      el("weakConcepts").innerHTML = homeData.weak_concepts.map(c => `
+        <div class="item">
+          <span class="pill yellow">mastery ${formatPercent(c.mastery_score)}</span>
+          <div class="item-title">${escapeHtml(c.concept_name)}</div>
+          <div class="muted">${escapeHtml(c.curriculum_subject)} · ${escapeHtml(c.curriculum_unit)}</div>
+        </div>
+      `).join("");
+
+      el("reviewHome").innerHTML = homeData.review_due.length
+        ? homeData.review_due.map(reviewCard).join("")
+        : `<div class="muted">오늘 복습할 문제가 없습니다.</div>`;
+
+      el("recommendationsHome").innerHTML = homeData.recommendations.slice(0, 3).map(questionCard).join("");
+      el("rawApi").textContent = JSON.stringify(homeData, null, 2);
+
+      renderProblemList();
+      typeset();
+    }
+
+    async function loadActivityGrid() {
+      activityData = await fetchJson(`/students/${studentId}/activity-grid?days=14`);
+      renderActivity("activityGridMini", activityData.activity_days);
+      renderActivity("activityGridFull", activityData.activity_days);
+      el("activityDetail").textContent =
+        `최근 ${activityData.days}일 동안 ${activityData.total_solved}문제를 풀었고, 현재 streak는 ${activityData.current_streak}일입니다.`;
+    }
+
+    function renderProblemList() {
+      if (!homeData) return;
+      el("problemList").innerHTML = homeData.recommendations.map(questionCard).join("");
+      typeset();
+    }
+
+    async function openSolvePanel(questionId) {
+      clearError();
+      const q = await fetchJson(`/questions/${questionId}/detail`);
+      selectedQuestion = q;
+      selectedAnswer = null;
+
+      el("solvePanel").style.display = "block";
+      el("solveTitle").textContent = `${q.exam_year} 수능 ${q.question_number}번`;
+      el("solveQuestion").innerHTML = mathText(q.question_text);
+      el("solveResult").innerHTML = "";
+
+      const choicesBox = el("solveChoices");
+      const shortInput = el("shortAnswerInput");
+
+      choicesBox.innerHTML = "";
+      shortInput.style.display = "none";
+      shortInput.value = "";
+
+      if (q.choices && q.choices.length) {
+        q.choices.forEach((choice, idx) => {
+          const num = String(idx + 1);
+          choicesBox.innerHTML += `
+            <div class="choice" onclick="selectChoice('${num}', this)">
+              ${num}. ${mathText(choice)}
+            </div>
+          `;
+        });
+      } else {
+        shortInput.style.display = "block";
+      }
+
+      if (q.answer === null || q.answer === undefined || q.answer === "") {
+        el("solveResult").innerHTML = `
+          <div class="item">
+            <span class="pill yellow">정답 미등록</span>
+            <div class="muted" style="margin-top:8px;">
+              이 문제는 아직 정답 데이터가 등록되지 않아 채점은 비활성화됩니다.
+              문제 보기와 로드맵/기출맵 표시는 가능합니다.
+            </div>
+          </div>
+        `;
+      }
+
+      showTab("solve");
+      typeset();
+      el("solvePanel").scrollIntoView({behavior: "smooth", block: "start"});
+    }
+
+    function selectChoice(value, node) {
+      selectedAnswer = value;
+      document.querySelectorAll(".choice").forEach(x => x.classList.remove("selected"));
+      node.classList.add("selected");
+    }
+
+    function closeSolvePanel() {
+      el("solvePanel").style.display = "none";
+      selectedQuestion = null;
+      selectedAnswer = null;
+    }
+
+    async function submitAnswer() {
+      if (!selectedQuestion) return;
+
+      if (
+        selectedQuestion.answer === null ||
+        selectedQuestion.answer === undefined ||
+        selectedQuestion.answer === ""
+      ) {
+        el("solveResult").innerHTML = `
+          <div class="item">
+            <span class="pill yellow">채점 불가</span>
+            <div class="muted" style="margin-top:8px;">
+              이 문제는 아직 정답이 등록되지 않았습니다.
+              정답표를 DB에 넣은 뒤 채점할 수 있습니다.
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const shortInput = el("shortAnswerInput");
+      const answer = selectedAnswer || shortInput.value.trim();
+
+      if (!answer) {
+        el("solveResult").innerHTML = `<div class="pill red">답을 선택하거나 입력해주세요.</div>`;
+        return;
+      }
+
+      const result = await fetchJson(`/students/${studentId}/answers`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          question_id: selectedQuestion.id || selectedQuestion.question_id,
+          selected_answer: answer
+        })
+      });
+
+      const correctText = result.is_correct ? "정답입니다!" : "오답입니다.";
+      const cls = result.is_correct ? "green" : "red";
+
+      el("solveResult").innerHTML = `
+        <div class="item">
+          <span class="pill ${cls}">${correctText}</span>
+          <div class="muted" style="margin-top:8px;">선택한 답: ${escapeHtml(answer)}</div>
+        </div>
+      `;
+
+      await refreshAll(false);
+      await loadReviewDue();
+      await loadWrongNotes();
+    }
+
+    async function loadReviewDue() {
+      const data = await fetchJson(`/students/${studentId}/review-due`);
+      el("reviewFull").innerHTML = data.reviews.length
+        ? data.reviews.map(reviewCard).join("")
+        : `<div class="muted">오늘 복습할 문제가 없습니다.</div>`;
+      typeset();
+    }
+
+    function resolvedWrongCard(q) {
+      return `
+        <div class="item">
+          <span class="pill green">정답 전환</span>
+          <span class="pill">${escapeHtml(q.difficulty_label || "문제")}</span>
+          <div class="item-title">${q.exam_year || ""} 수능 ${q.question_number}번</div>
+          <div class="question">${mathText(q.question_text)}</div>
+          <div class="muted" style="margin-top:8px;">
+            처음 틀린 답: ${escapeHtml(q.first_wrong_answer)} · 다시 푼 답: ${escapeHtml(q.selected_answer)} · 정답: ${escapeHtml(q.answer)}
+          </div>
+          <div class="action-row">
+            <button class="secondary" onclick="openSolvePanel(${q.question_id})">다시 보기</button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadWrongNotes() {
+      const data = await fetchJson(`/students/${studentId}/wrong-notes`);
+
+      el("wrongNotes").innerHTML = data.notes.length
+        ? data.notes.map(reviewCard).join("")
+        : `<div class="muted">현재 남아 있는 오답이 없습니다.</div>`;
+
+      el("resolvedWrongNotes").innerHTML = data.resolved_notes && data.resolved_notes.length
+        ? data.resolved_notes.map(resolvedWrongCard).join("")
+        : `<div class="muted">아직 다시 풀어서 정답으로 전환된 문제가 없습니다.</div>`;
+
+      typeset();
+    }
+
+    async function loadRoadmap() {
+      const data = await fetchJson(`/students/${studentId}/roadmap`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          target_grade: 2,
+          target_percentile: 15,
+          weeks: 6,
+          daily_study_minutes: 90,
+          questions_per_week: 3
+        })
+      });
+
+      const totalQuestions = data.steps.reduce(
+        (acc, step) => acc + step.recommended_questions.length,
+        0
+      );
+
+      const uniqueConcepts = new Set(data.steps.map(step => step.concept_name)).size;
+
+      el("roadmapList").innerHTML = `
+        <div class="roadmap-summary">
+          <div class="roadmap-summary-card">
+            <div class="label">기간</div>
+            <div class="value">${data.weeks}주</div>
+          </div>
+          <div class="roadmap-summary-card">
+            <div class="label">주요 개념</div>
+            <div class="value">${uniqueConcepts}개</div>
+          </div>
+          <div class="roadmap-summary-card">
+            <div class="label">추천 문제</div>
+            <div class="value">${totalQuestions}문제</div>
+          </div>
+        </div>
+
+        <div class="roadmap-board">
+          ${data.steps.map(step => {
+            const questions = step.recommended_questions.slice(0, 3).map(q => `
+              <div class="phase-question compact">
+                <div class="phase-question-top">
+                  <span class="difficulty-badge ${difficultyClass(q.difficulty_label)}">
+                    ${escapeHtml(q.difficulty_label || "medium")}
+                  </span>
+                  <div class="phase-question-meta">
+                    ${q.exam_year} · ${q.question_number}번 · ${q.score || "-"}점
+                  </div>
+                </div>
+
+                <div class="phase-question-title compact">
+                  ${escapeHtml(step.concept_name)} 추천 문제
+                </div>
+
+                ${q.fallback_reason ? `
+                  <div class="muted" style="font-size:11px; margin-top:6px; line-height:1.45;">
+                    ↳ ${escapeHtml(q.fallback_reason)}
+                  </div>
+                ` : ""}
+
+                <div class="phase-question-actions">
+                  <button class="secondary" onclick="openSolvePanel(${q.question_id})">풀기</button>
+                </div>
+              </div>
+            `).join("");
+
+            return `
+              <div class="phase-card">
+                <div class="phase-head">
+                  <div class="phase-icon">${step.week_index}</div>
+                  <div>
+                    <div class="phase-week">WEEK ${step.week_index}</div>
+                    <div class="phase-title">${escapeHtml(step.concept_name)}</div>
+                  </div>
+                </div>
+
+                <div class="phase-goal">${escapeHtml(step.study_goal)}</div>
+                <div class="phase-line"></div>
+
+                ${questions || '<div class="phase-empty">추천 가능한 문제가 아직 없습니다.</div>'}
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+
+      typeset();
+    }
+
+    async function loadQuestionMap() {
+      const data = await fetchJson(`/students/${studentId}/question-map`);
+      el("questionMap").innerHTML = data.years.map(year => `
+        <div class="map-year">
+          <div class="section-title">
+            <h2>${year.exam_year}학년도 ${year.exam_year === 2026 ? "· 홀수형" : ""}</h2>
+            <div class="muted">O ${year.correct_count} · X ${year.wrong_count} · △ ${year.unsolved_count}</div>
+          </div>
+          <div class="map-grid">
+            ${year.questions.map(q => `
+              <div class="qdot ${q.status}" title="${q.question_number}번 · ${q.status_label}" onclick="openSolvePanel(${q.question_id})">
+                ${q.question_number}
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    async function loadGrowthCurve() {
+      const data = await fetchJson(`/students/${studentId}/growth-curve`);
+
+      if (!data.points.length) {
+        el("growthCurve").innerHTML = `<div class="muted">아직 성장 데이터가 부족합니다.</div>`;
+        return;
+      }
+
+      el("growthCurve").innerHTML = `
+        <div class="growth-bars">
+          ${data.points.map(p => `
+            <div class="bar-row">
+              <div class="muted">${p.date.slice(5)}</div>
+              <div class="bar-bg">
+                <div class="bar-fill" style="width:${Math.min(100, p.readiness_score)}%"></div>
+              </div>
+              <div class="muted">${p.readiness_score}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    async function loadDiagnostic() {
+      const data = await fetchJson(`/students/${studentId}/diagnostic-test`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({question_count: 8})
+      });
+
+      el("problemList").innerHTML = data.questions.map(questionCard).join("");
+      typeset();
+    }
+
+
+    let selectedTodoDate = new Date().toISOString().slice(0, 10);
+    let selectedTodoSubject = 'math';
+
+    function getCurrentYearMonth() {
+      const d = new Date();
+      return {
+        year: d.getFullYear(),
+        month: d.getMonth() + 1
+      };
+    }
+
+    function categoryLabel(category) {
+      if (category === "math") return "수학";
+      if (category === "korean") return "국어";
+      if (category === "english") return "영어";
+      if (category === "review") return "복습";
+      if (category === "solve") return "문제";
+      if (category === "roadmap") return "로드맵";
+      return "일반";
+    }
+
+    async function loadTodoCalendar() {
+      const {year, month} = getCurrentYearMonth();
+
+      const data = await fetchJson(`/students/${studentId}/study-calendar?year=${year}&month=${month}`);
+
+      const monthStart = `${year}-${String(month).padStart(2, "0")}-01`;
+      const monthEnd = `${year}-${String(month).padStart(2, "0")}-31`;
+      const monthTodos = await fetchJson(`/students/${studentId}/todos?start_date=${monthStart}&end_date=${monthEnd}`);
+
+      const todosByDate = {};
+      monthTodos.forEach(todo => {
+        if (!todosByDate[todo.due_date]) todosByDate[todo.due_date] = [];
+        todosByDate[todo.due_date].push(todo);
+      });
+
+      el("todoMonthLabel").textContent =
+        `${data.year}년 ${data.month}월 · 완료 ${data.done_todos}/${data.total_todos} · 달성률 ${formatPercent(data.completion_rate)}`;
+
+      const first = new Date(data.year, data.month - 1, 1);
+      const firstWeekday = first.getDay();
+
+      const names = ["일", "월", "화", "수", "목", "금", "토"];
+
+      let html = names.map(n => `<div class="todo-day-name">${n}</div>`).join("");
+
+      for (let i = 0; i < firstWeekday; i++) {
+        html += `<div class="todo-day empty"></div>`;
+      }
+
+      data.days.forEach(day => {
+        const isSelected = day.date === selectedTodoDate;
+        const rate = day.total_todos ? Math.round((day.done_todos / day.total_todos) * 100) : 0;
+        const dayTodos = todosByDate[day.date] || [];
+        const primaryCategory = dayTodos[0]?.category || "";
+        const dayColorClass = primaryCategory ? `${primaryCategory}-day` : "";
+
+        const dots = dayTodos.slice(0, 5).map(todo => {
+          const done = todo.is_done ? "done" : "";
+          return `<span class="todo-dot ${escapeHtml(todo.category)} ${done}"></span>`;
+        }).join("");
+
+        html += `
+          <div class="todo-day ${dayColorClass} ${isSelected ? "selected" : ""}" onclick="selectTodoDate('${day.date}')">
+            <div class="todo-day-num">${day.day}</div>
+            <div class="todo-dots">${dots}</div>
+            <div class="todo-day-progress"><div style="width:${rate}%"></div></div>
+          </div>
+        `;
+      });
+
+      el("todoCalendar").innerHTML = html;
+
+      await loadTodosForDate(selectedTodoDate);
+    }
+
+    async function selectTodoDate(dateValue) {
+      selectedTodoDate = dateValue;
+      await loadTodoCalendar();
+    }
+
+    async function loadTodosForDate(dateValue) {
+      const data = await fetchJson(`/students/${studentId}/todos/day?target_date=${dateValue}`);
+
+      el("todoSelectedDateTitle").textContent =
+        `${dateValue} 할 일 · ${data.done_count}/${data.total_count}`;
+
+      if (!data.todos.length) {
+        el("todoList").innerHTML = `
+          <div class="muted">이 날짜에는 아직 할 일이 없습니다. + 할 일 추가로 직접 계획을 넣어보세요.</div>
+        `;
+        return;
+      }
+
+      el("todoList").innerHTML = data.todos.map(todo => `
+        <div class="todo-item">
+          <button class="todo-check ${todo.is_done ? "done" : ""}" onclick="toggleTodo(${todo.id})">
+            ${todo.is_done ? "✓" : ""}
+          </button>
+          <div>
+            <div class="todo-title" style="${todo.is_done ? "text-decoration: line-through; color:#9ca3af;" : ""}">
+              ${escapeHtml(todo.title)}
+            </div>
+            ${todo.description ? `<div class="todo-desc">${escapeHtml(todo.description)}</div>` : ""}
+          </div>
+          <div class="todo-category ${escapeHtml(todo.category)}">${categoryLabel(todo.category)}</div>
+        </div>
+      `).join("");
+    }
+
+    async function toggleTodo(todoId) {
+      await fetchJson(`/students/${studentId}/todos/${todoId}/toggle`, {
+        method: "PATCH"
+      });
+
+      await loadTodoCalendar();
+      await loadHome();
+      await loadActivityGrid();
+    }
+
+    function openTodoModal() {
+      selectedTodoSubject = "math";
+      el("todoTitleInput").value = "";
+      el("todoDescInput").value = "";
+      el("todoModalDate").textContent = `${selectedTodoDate}에 추가됩니다.`;
+      document.querySelectorAll(".subject-option").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.subject === selectedTodoSubject);
+      });
+      el("todoModalBackdrop").style.display = "flex";
+      setTimeout(() => el("todoTitleInput").focus(), 50);
+    }
+
+    function closeTodoModal() {
+      el("todoModalBackdrop").style.display = "none";
+    }
+
+    function selectTodoSubject(subject) {
+      selectedTodoSubject = subject;
+      document.querySelectorAll(".subject-option").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.subject === subject);
+      });
+    }
+
+    async function createQuickTodo() {
+      openTodoModal();
+    }
+
+    async function submitQuickTodo() {
+      const title = el("todoTitleInput").value.trim();
+      const description = el("todoDescInput").value.trim();
+
+      if (!title) {
+        el("todoTitleInput").focus();
+        return;
+      }
+
+      await fetchJson(`/students/${studentId}/todos`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          due_date: selectedTodoDate,
+          title,
+          description: description || null,
+          category: selectedTodoSubject,
+          priority: 50
+        })
+      });
+
+      closeTodoModal();
+      await loadTodoCalendar();
+    }
+
+    async function generateTodosFromPlan() {
+      const result = await fetchJson(`/students/${studentId}/todos/generate`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          start_date: selectedTodoDate,
+          weeks: 2,
+          questions_per_day: 3
+        })
+      });
+
+      await loadTodoCalendar();
+
+      el("todoList").insertAdjacentHTML("afterbegin", `
+        <div class="item">
+          <span class="pill blue">추천 문제</span>
+          <div class="item-title">추천 문제 풀기 ${result.created_count}개를 불러왔습니다.</div>
+          <div class="muted">이제 캘린더에서 날짜별 추천 문제 todo를 확인할 수 있습니다.</div>
+        </div>
+      `);
+    }
+
+
+    async function refreshAll(switchHome = true) {
+      try {
+        clearError();
+        await loadHome();
+        await loadActivityGrid();
+        if (switchHome) showTab("home");
+      } catch (err) {
+        showError(err.message);
+      }
+    }
+
+    refreshAll();
+  </script>
+
+  <div class="todo-modal-backdrop" id="todoModalBackdrop">
+    <div class="todo-modal">
+      <div class="todo-modal-title">할 일 추가</div>
+      <div class="todo-modal-sub" id="todoModalDate">선택한 날짜에 추가됩니다.</div>
+
+      <input id="todoTitleInput" class="todo-input" placeholder="예: 지수함수 개념 복습하기" />
+      <input id="todoDescInput" class="todo-input" placeholder="메모 선택 입력" />
+
+      <div class="subject-picker">
+        <button class="subject-option active" data-subject="math" onclick="selectTodoSubject('math')">수학</button>
+        <button class="subject-option" data-subject="korean" onclick="selectTodoSubject('korean')">국어</button>
+        <button class="subject-option" data-subject="english" onclick="selectTodoSubject('english')">영어</button>
+        <button class="subject-option" data-subject="study" onclick="selectTodoSubject('study')">일반</button>
+      </div>
+
+      <div class="todo-modal-actions">
+        <button class="secondary" onclick="closeTodoModal()">취소</button>
+        <button class="primary" onclick="submitQuickTodo()">추가</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

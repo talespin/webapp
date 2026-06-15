@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>수플러</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #f7f7f5;
+      --card: #ffffff;
+      --text: #111111;
+      --muted: #9096a1;
+      --line: #ececec;
+      --dark: #111111;
+      --soft: #f2f3f5;
+      --blue: #6478ff;
+      --green0: #e5e7eb;
+      --green1: #d9f99d;
+      --green2: #86efac;
+      --green3: #22c55e;
+      --green4: #15803d;
+      --green5: #052e16;
+      --shadow: 0 20px 55px rgba(20,20,20,0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+    }
+
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 30px 22px 80px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #eee7ff;
+      font-size: 30px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 40px;
+      font-weight: 950;
+      letter-spacing: -1.5px;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .icon-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 0;
+      background: white;
+      box-shadow: var(--shadow);
+      font-size: 20px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .tabs {
+      background: white;
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      border: 0;
+      border-radius: 24px;
+      background: transparent;
+      padding: 18px 14px;
+      font-size: 18px;
+      font-weight: 900;
+      color: #9aa0aa;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: #111;
+      color: white;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+      margin-bottom: 22px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 950;
+      letter-spacing: -1px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.55;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background: var(--soft);
+      color: #555;
+      padding: 8px 13px;
+      font-size: 13px;
+      font-weight: 900;
+      margin: 4px 5px 4px 0;
+    }
+
+    .pill.dark {
+      background: #111;
+      color: #fff;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .summary-card {
+      background: #fafafa;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 20px;
+    }
+
+    .summary-card .label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .summary-card .value {
+      font-size: 28px;
+      font-weight: 950;
+      letter-spacing: -1px;
+    }
+
+    .roadmap-subject {
+      margin-bottom: 30px;
+    }
+
+    .roadmap-subject h3 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      font-weight: 950;
+      letter-spacing: -0.8px;
+    }
+
+    .unit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+      gap: 8px;
+    }
+
+    .unit-box {
+      aspect-ratio: 1;
+      min-height: 38px;
+      border: 0;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: 0.12s ease;
+      position: relative;
+    }
+
+    .unit-box:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.13);
+    }
+
+    .lv0 { background: var(--green0); }
+    .lv1 { background: var(--green1); }
+    .lv2 { background: var(--green2); }
+    .lv3 { background: var(--green3); }
+    .lv4 { background: var(--green4); }
+    .lv5 { background: var(--green5); }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    .legend-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+    }
+
+    .detail-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(520px, 100%);
+      height: 100vh;
+      background: white;
+      box-shadow: -20px 0 60px rgba(0,0,0,0.16);
+      transform: translateX(105%);
+      transition: 0.2s ease;
+      z-index: 100;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .detail-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      display: none;
+      z-index: 90;
+    }
+
+    .drawer-backdrop.open {
+      display: block;
+    }
+
+    .drawer-close {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--soft);
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+      float: right;
+    }
+
+    .drawer-title {
+      clear: both;
+      font-size: 34px;
+      font-weight: 950;
+      letter-spacing: -1px;
+      margin: 30px 0 8px;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .primary,
+    .secondary {
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 18px;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .primary {
+      background: #111;
+      color: white;
+    }
+
+    .secondary {
+      background: var(--soft);
+      color: #222;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      font-weight: 900;
+      color: #555;
+    }
+
+    .input,
+    .select {
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 15px 17px;
+      font-size: 16px;
+      background: white;
+      outline: none;
+    }
+
+    .career-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .career-card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 20px;
+      background: #fafafa;
+      cursor: pointer;
+    }
+
+    .career-card.active {
+      border-color: #111;
+      background: #fff;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+
+    .career-card h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      font-weight: 950;
+    }
+
+    .todo-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 22px;
+    }
+
+    .todo-calendar,
+    .todo-list-panel {
+      background: #fafafa;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 22px;
+    }
+
+    .month-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .month-title {
+      font-size: 24px;
+      font-weight: 950;
+    }
+
+    .week-row,
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+
+    .week-row {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .day-cell {
+      aspect-ratio: 1;
+      border: 0;
+      border-radius: 18px;
+      background: #eceef2;
+      cursor: pointer;
+      font-weight: 900;
+      position: relative;
+    }
+
+    .day-cell.selected {
+      background: #111;
+      color: white;
+    }
+
+    .day-cell.empty {
+      background: transparent;
+      cursor: default;
+    }
+
+    .day-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #6478ff;
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .todo-row {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid #eee;
+      align-items: start;
+    }
+
+    .todo-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 0;
+      background: #d8dbe2;
+      cursor: pointer;
+      color: white;
+      font-weight: 900;
+    }
+
+    .todo-check.done {
+      background: #111;
+    }
+
+    .todo-title.done {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.3);
+      z-index: 200;
+      padding: 20px;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 30px;
+      padding: 28px;
+      width: min(520px, 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .modal-card h3 {
+      margin: 0 0 18px;
+      font-size: 28px;
+      font-weight: 950;
+    }
+
+    @media (max-width: 900px) {
+      .summary-grid,
+      .profile-grid,
+      .career-cards,
+      .todo-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .unit-grid {
+        grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+      }
+    }
+  </style>
+
+  <style id="roadmap-hover-style">
+    .unit-grid {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, 18px) !important;
+      gap: 5px !important;
+      align-items: start !important;
+    }
+
+    .unit-box {
+      width: 18px !important;
+      height: 18px !important;
+      min-height: 18px !important;
+      aspect-ratio: auto !important;
+      border-radius: 4px !important;
+      border: 1px solid rgba(255,255,255,0.55) !important;
+      cursor: pointer !important;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, outline 0.1s ease !important;
+    }
+
+    .unit-box:hover {
+      transform: scale(1.25) !important;
+      z-index: 5 !important;
+      outline: 2px solid #111 !important;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.16) !important;
+    }
+
+    .roadmap-subject {
+      margin-bottom: 34px !important;
+    }
+
+    .roadmap-subject h3 {
+      margin-bottom: 12px !important;
+    }
+
+    .unit-tooltip {
+      position: fixed;
+      display: none;
+      z-index: 99999;
+      max-width: 320px;
+      background: #111;
+      color: #fff;
+      border-radius: 16px;
+      padding: 13px 14px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+      pointer-events: none;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .unit-tooltip .tip-title {
+      font-size: 15px;
+      font-weight: 950;
+      margin-bottom: 4px;
+      letter-spacing: -0.2px;
+    }
+
+    .unit-tooltip .tip-meta {
+      color: rgba(255,255,255,0.72);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .unit-tooltip .tip-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .unit-tooltip .tip-bar > div {
+      height: 100%;
+      background: #86efac;
+      border-radius: 999px;
+    }
+
+    @media (max-width: 900px) {
+      .unit-grid {
+        grid-template-columns: repeat(auto-fill, 16px) !important;
+        gap: 5px !important;
+      }
+
+      .unit-box {
+        width: 16px !important;
+        height: 16px !important;
+        min-height: 16px !important;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="app">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">📘</div>
+        <div>
+          <h1>수플러</h1>
+          <p id="studentSub">개인화 수능 학습 플래너</p>
+        </div>
+      </div>
+      <button class="icon-btn" onclick="loadAll()">↻</button>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab-btn active" onclick="showView('overview')">전과목 로드맵 현황</button>
+      <button class="tab-btn" onclick="showView('planner')">진로 기반 로드맵 설계</button>
+      <button class="tab-btn" onclick="showView('todo')">투두리스트</button>
+    </nav>
+
+    <section id="view-overview" class="view active">
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2>전과목 수능 로드맵 현황</h2>
+            <div class="muted">박스 위에 마우스를 올리면 단원 정보가 보이고, 클릭하면 세부 학습 기능이 열립니다.</div>
+          </div>
+          <span class="pill dark" id="overallMastery">-</span>
+        </div>
+
+        <div class="summary-grid" id="subjectSummary"></div>
+
+        <div class="legend">
+          낮음
+          <span class="legend-box lv0"></span>
+          <span class="legend-box lv1"></span>
+          <span class="legend-box lv2"></span>
+          <span class="legend-box lv3"></span>
+          <span class="legend-box lv4"></span>
+          <span class="legend-box lv5"></span>
+          높음
+        </div>
+
+        <div id="roadmapGrid"></div>
+      </div>
+    </section>
+
+    <section id="view-planner" class="view">
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2>진로 기반 로드맵 설계</h2>
+            <div class="muted">학생의 목표 진로와 선택과목에 맞춰 수능 로드맵의 우선순위를 설정합니다.</div>
+          </div>
+          <button class="primary" onclick="saveProfile()">저장</button>
+        </div>
+
+        <div class="career-cards">
+          <div class="career-card" data-career="medical" onclick="selectCareer('medical')">
+            <h3>의대/약대</h3>
+            <div class="muted">수학·과탐 고난도 개념 우선</div>
+          </div>
+          <div class="career-card" data-career="engineering" onclick="selectCareer('engineering')">
+            <h3>공대</h3>
+            <div class="muted">미적분/기하/과탐 중심</div>
+          </div>
+          <div class="career-card" data-career="humanities" onclick="selectCareer('humanities')">
+            <h3>인문/상경</h3>
+            <div class="muted">국어·영어·사탐 비중 강화</div>
+          </div>
+        </div>
+
+        <div class="profile-grid">
+          <div>
+            <div class="field">
+              <label>목표 진로</label>
+              <input id="careerInput" class="input" placeholder="예: 컴퓨터공학과, 의예과, 경영학과" />
+            </div>
+            <div class="field">
+              <label>목표 등급</label>
+              <select id="targetGradeInput" class="select">
+                <option value="1">1등급</option>
+                <option value="2" selected>2등급</option>
+                <option value="3">3등급</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>국어 선택</label>
+              <select id="koreanChoiceInput" class="select">
+                <option>화법과 작문</option>
+                <option>언어와 매체</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <div class="field">
+              <label>수학 선택</label>
+              <select id="mathChoiceInput" class="select">
+                <option>확률과 통계</option>
+                <option selected>미적분</option>
+                <option>기하</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>탐구 선택</label>
+              <input id="inquiryInput" class="input" placeholder="예: 생명과학 I, 화학 I" />
+            </div>
+            <div class="field">
+              <label>학습 우선순위 메모</label>
+              <input id="priorityInput" class="input" placeholder="예: 수학 킬러보다 국어 독서 먼저" />
+            </div>
+          </div>
+        </div>
+
+        <div id="profileResult" class="muted"></div>
+      </div>
+    </section>
+
+    <section id="view-todo" class="view">
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2>투두리스트</h2>
+            <div class="muted" id="todoDateLabel">오늘 할 일</div>
+          </div>
+          <div class="action-row">
+            <button class="secondary" onclick="generateRecommendations()">추천 문제 불러오기</button>
+            <button class="primary" onclick="openTodoModal()">+ 할 일 추가</button>
+          </div>
+        </div>
+
+        <div class="todo-layout">
+          <div class="todo-calendar">
+            <div class="month-row">
+              <button class="secondary" onclick="moveMonth(-1)">‹</button>
+              <div class="month-title" id="monthTitle">-</div>
+              <button class="secondary" onclick="moveMonth(1)">›</button>
+            </div>
+            <div class="week-row">
+              <div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div><div>일</div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+
+          <div class="todo-list-panel">
+            <div id="todoStats"></div>
+            <div id="todoList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  
+  <div id="unitTooltip" class="unit-tooltip"></div>
+
+
+  <div id="drawerBackdrop" class="drawer-backdrop" onclick="closeUnitDrawer()"></div>
+  <aside id="unitDrawer" class="detail-drawer">
+    <button class="drawer-close" onclick="closeUnitDrawer()">×</button>
+    <div class="drawer-title" id="drawerTitle">단원</div>
+    <div class="muted" id="drawerMeta"></div>
+    <div class="action-row">
+      <button class="primary" onclick="goSolveFromUnit()">추천 문제 풀기</button>
+      <button class="secondary" onclick="goWrongNotesFromUnit()">오답노트 보기</button>
+      <button class="secondary" onclick="addUnitTodo()">복습 todo 추가</button>
+    </div>
+
+    <div class="card" style="box-shadow:none; border:1px solid var(--line); margin-top:22px;">
+      <h3>단원 학습 요약</h3>
+      <div id="drawerBody" class="muted"></div>
+    </div>
+  </aside>
+
+  <div id="todoModal" class="modal">
+    <div class="modal-card">
+      <h3>할 일 추가</h3>
+      <div class="field">
+        <label>할 일 제목</label>
+        <input id="todoTitle" class="input" placeholder="예: 지수와 로그 복습" />
+      </div>
+      <div class="field">
+        <label>과목</label>
+        <input id="todoSubject" class="input" placeholder="예: 수학" value="수학" />
+      </div>
+      <div class="field">
+        <label>날짜</label>
+        <input id="todoDate" class="input" type="date" />
+      </div>
+      <div class="field">
+        <label>메모</label>
+        <input id="todoDesc" class="input" placeholder="선택 사항" />
+      </div>
+      <div class="action-row" style="justify-content:flex-end;">
+        <button class="secondary" onclick="closeTodoModal()">취소</button>
+        <button class="primary" onclick="saveTodo()">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const studentId = 1;
+    let roadmapData = null;
+    let selectedUnit = null;
+    let todoViewDate = new Date();
+    let selectedTodoDate = new Date().toISOString().slice(0, 10);
+    let selectedCareer = "engineering";
+
+    function el(id) {
+      return document.getElementById(id);
+    }
+
+    async function fetchJson(url, options) {
+      const res = await fetch(url, options);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`${url} ${res.status}: ${text}`);
+      }
+      return await res.json();
+    }
+
+    function showView(name) {
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+
+      el(`view-${name}`).classList.add("active");
+
+      const index = { overview: 0, planner: 1, todo: 2 }[name];
+      document.querySelectorAll(".tab-btn")[index].classList.add("active");
+
+      if (name === "todo") loadTodo();
+    }
+
+    function pct(x) {
+      return `${Math.round((x || 0) * 100)}%`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    async function loadRoadmap() {
+      roadmapData = await fetchJson(`/students/${studentId}/curriculum-roadmap`);
+
+      el("studentSub").textContent = `${roadmapData.student_name} · 전과목 로드맵`;
+      el("overallMastery").textContent = `전체 완성도 ${pct(roadmapData.overall_mastery)}`;
+
+      el("subjectSummary").innerHTML = roadmapData.subject_summaries.map(s => `
+        <div class="summary-card">
+          <div class="label">${escapeHtml(s.subject)}</div>
+          <div class="value">${pct(s.average_mastery)}</div>
+          <div class="muted">${s.completed_units}/${s.unit_count} 단원 완료</div>
+        </div>
+      `).join("");
+
+      const bySubject = {};
+      roadmapData.units.forEach(u => {
+        if (!bySubject[u.subject]) bySubject[u.subject] = [];
+        bySubject[u.subject].push(u);
+      });
+
+      el("roadmapGrid").innerHTML = Object.entries(bySubject).map(([subject, units]) => `
+        <div class="roadmap-subject">
+          <h3>${escapeHtml(subject)}</h3>
+          <div class="unit-grid">
+            ${units.map(u => `
+              <button
+                class="unit-box lv${u.level}"
+                aria-label="${escapeHtml(u.unit_name)}"
+                data-unit-id="${escapeHtml(u.unit_id)}"
+                data-subject="${escapeHtml(u.subject)}"
+                data-area="${escapeHtml(u.area)}"
+                data-name="${escapeHtml(u.unit_name)}"
+                data-mastery="${pct(u.mastery_score)}"
+                data-mastery-raw="${Math.round((u.mastery_score || 0) * 100)}"
+                onmouseenter="showUnitTooltip(event)"
+                onmousemove="moveUnitTooltip(event)"
+                onmouseleave="hideUnitTooltip()"
+                onclick="openUnitDrawer('${u.unit_id}')"
+              ></button>
+            `).join("")}
+          </div>
+        </div>
+      `).join("");
+    }
+
+
+    function showUnitTooltip(event) {
+      const target = event.currentTarget;
+      const tooltip = el("unitTooltip");
+
+      const subject = target.dataset.subject || "";
+      const area = target.dataset.area || "";
+      const name = target.dataset.name || "";
+      const mastery = target.dataset.mastery || "0%";
+      const raw = Number(target.dataset.masteryRaw || 0);
+
+      tooltip.innerHTML = `
+        <div class="tip-title">${escapeHtml(name)}</div>
+        <div class="tip-meta">${escapeHtml(subject)} · ${escapeHtml(area)}</div>
+        <div>완성도 <b>${escapeHtml(mastery)}</b></div>
+        <div class="tip-bar"><div style="width:${Math.max(0, Math.min(100, raw))}%"></div></div>
+        <div style="margin-top:8px; color:rgba(255,255,255,0.7); font-weight:700;">클릭하면 세부 학습 기능이 열립니다.</div>
+      `;
+
+      tooltip.style.display = "block";
+      moveUnitTooltip(event);
+    }
+
+    function moveUnitTooltip(event) {
+      const tooltip = el("unitTooltip");
+      if (!tooltip) return;
+
+      const margin = 16;
+      let x = event.clientX + margin;
+      let y = event.clientY + margin;
+
+      const rect = tooltip.getBoundingClientRect();
+
+      if (x + rect.width > window.innerWidth - 12) {
+        x = event.clientX - rect.width - margin;
+      }
+
+      if (y + rect.height > window.innerHeight - 12) {
+        y = event.clientY - rect.height - margin;
+      }
+
+      tooltip.style.left = `${x}px`;
+      tooltip.style.top = `${y}px`;
+    }
+
+    function hideUnitTooltip() {
+      const tooltip = el("unitTooltip");
+      if (tooltip) tooltip.style.display = "none";
+    }
+
+
+    function openUnitDrawer(unitId) {
+      selectedUnit = roadmapData.units.find(u => u.unit_id === unitId);
+      if (!selectedUnit) return;
+
+      el("drawerTitle").textContent = selectedUnit.unit_name;
+      el("drawerMeta").textContent =
+        `${selectedUnit.subject} · ${selectedUnit.area} · 완성도 ${pct(selectedUnit.mastery_score)}`;
+
+      el("drawerBody").innerHTML = `
+        이 단원은 현재 <b>${pct(selectedUnit.mastery_score)}</b> 정도 채워져 있습니다.<br>
+        여기에서 추천 문제를 풀거나, 오답노트를 확인하거나, 복습 todo를 추가할 수 있습니다.
+      `;
+
+      el("drawerBackdrop").classList.add("open");
+      el("unitDrawer").classList.add("open");
+    }
+
+    function closeUnitDrawer() {
+      el("drawerBackdrop").classList.remove("open");
+      el("unitDrawer").classList.remove("open");
+    }
+
+    function goSolveFromUnit() {
+      alert("다음 단계에서 이 단원에 연결된 추천 문제 화면을 붙이면 됩니다.");
+    }
+
+    function goWrongNotesFromUnit() {
+      alert("다음 단계에서 이 단원에 해당하는 오답노트 필터를 붙이면 됩니다.");
+    }
+
+    function addUnitTodo() {
+      if (!selectedUnit) return;
+      openTodoModal(`${selectedUnit.unit_name} 복습`, selectedUnit.subject);
+    }
+
+    function selectCareer(career) {
+      selectedCareer = career;
+      document.querySelectorAll(".career-card").forEach(c => c.classList.remove("active"));
+      document.querySelector(`[data-career="${career}"]`).classList.add("active");
+    }
+
+    function saveProfile() {
+      const profile = {
+        career_type: selectedCareer,
+        career_text: el("careerInput").value,
+        target_grade: el("targetGradeInput").value,
+        korean_choice: el("koreanChoiceInput").value,
+        math_choice: el("mathChoiceInput").value,
+        inquiry: el("inquiryInput").value,
+        priority: el("priorityInput").value,
+      };
+
+      localStorage.setItem("suflerRoadmapProfile", JSON.stringify(profile));
+      el("profileResult").textContent = "로드맵 설정이 저장되었습니다. 1탭의 전과목 로드맵 우선순위에 반영할 수 있습니다.";
+    }
+
+    function loadProfile() {
+      const saved = localStorage.getItem("suflerRoadmapProfile");
+      if (!saved) {
+        selectCareer("engineering");
+        return;
+      }
+
+      const p = JSON.parse(saved);
+      selectCareer(p.career_type || "engineering");
+      el("careerInput").value = p.career_text || "";
+      el("targetGradeInput").value = p.target_grade || "2";
+      el("koreanChoiceInput").value = p.korean_choice || "화법과 작문";
+      el("mathChoiceInput").value = p.math_choice || "미적분";
+      el("inquiryInput").value = p.inquiry || "";
+      el("priorityInput").value = p.priority || "";
+    }
+
+    function ymd(d) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function daysInMonth(year, month) {
+      return new Date(year, month, 0).getDate();
+    }
+
+    function mondayOffset(year, month) {
+      const js = new Date(year, month - 1, 1).getDay();
+      return (js + 6) % 7;
+    }
+
+    async function loadTodo() {
+      const year = todoViewDate.getFullYear();
+      const month = todoViewDate.getMonth() + 1;
+      const start = `${year}-${String(month).padStart(2, "0")}-01`;
+      const end = `${year}-${String(month).padStart(2, "0")}-${daysInMonth(year, month)}`;
+
+      const calendar = await fetchJson(`/students/${studentId}/study-calendar?year=${year}&month=${month}`);
+      const todos = await fetchJson(`/students/${studentId}/todos?start_date=${start}&end_date=${end}`);
+
+      el("monthTitle").textContent = `${year}년 ${month}월`;
+
+      const byDate = {};
+      todos.forEach(t => {
+        if (!byDate[t.due_date]) byDate[t.due_date] = [];
+        byDate[t.due_date].push(t);
+      });
+
+      let html = "";
+      for (let i = 0; i < mondayOffset(year, month); i++) {
+        html += `<button class="day-cell empty"></button>`;
+      }
+
+      for (let day = 1; day <= daysInMonth(year, month); day++) {
+        const date = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const hasTodo = byDate[date] && byDate[date].length;
+        const selected = date === selectedTodoDate ? "selected" : "";
+
+        html += `
+          <button class="day-cell ${selected}" onclick="selectTodoDate('${date}')">
+            ${day}
+            ${hasTodo ? `<span class="day-dot"></span>` : ""}
+          </button>
+        `;
+      }
+
+      el("calendarGrid").innerHTML = html;
+      await loadTodoDay();
+    }
+
+    async function loadTodoDay() {
+      const data = await fetchJson(`/students/${studentId}/todos/day?target_date=${selectedTodoDate}`);
+
+      el("todoDateLabel").textContent = `${selectedTodoDate} · 총 ${data.total_count}개 · 완료 ${data.done_count}개`;
+
+      el("todoStats").innerHTML = `
+        <span class="pill">총 ${data.total_count}개</span>
+        <span class="pill">완료 ${data.done_count}개</span>
+        <span class="pill">미완료 ${data.pending_count}개</span>
+      `;
+
+      if (!data.todos.length) {
+        el("todoList").innerHTML = `<div class="muted">아직 등록된 할 일이 없습니다.</div>`;
+        return;
+      }
+
+      el("todoList").innerHTML = data.todos.map(t => `
+        <div class="todo-row">
+          <button class="todo-check ${t.is_done ? "done" : ""}" onclick="toggleTodo(${t.id})">${t.is_done ? "✓" : ""}</button>
+          <div>
+            <div class="todo-title ${t.is_done ? "done" : ""}">${escapeHtml(t.title)}</div>
+            <div class="muted">${escapeHtml(t.category || "학습")} ${t.description ? "· " + escapeHtml(t.description) : ""}</div>
+          </div>
+          <button class="secondary" onclick="deleteTodo(${t.id})">삭제</button>
+        </div>
+      `).join("");
+    }
+
+    function selectTodoDate(date) {
+      selectedTodoDate = date;
+      loadTodo();
+    }
+
+    function moveMonth(delta) {
+      todoViewDate.setMonth(todoViewDate.getMonth() + delta);
+      loadTodo();
+    }
+
+    async function toggleTodo(id) {
+      await fetchJson(`/students/${studentId}/todos/${id}/toggle`, { method: "PATCH" });
+      await loadTodo();
+    }
+
+    async function deleteTodo(id) {
+      await fetchJson(`/students/${studentId}/todos/${id}`, { method: "DELETE" });
+      await loadTodo();
+    }
+
+    async function generateRecommendations() {
+      await fetchJson(`/students/${studentId}/todos/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ start_date: selectedTodoDate, weeks: 2, questions_per_day: 3 })
+      });
+      await loadTodo();
+    }
+
+    function openTodoModal(title = "", subject = "수학") {
+      el("todoTitle").value = title;
+      el("todoSubject").value = subject;
+      el("todoDate").value = selectedTodoDate;
+      el("todoDesc").value = "";
+      el("todoModal").classList.add("open");
+    }
+
+    function closeTodoModal() {
+      el("todoModal").classList.remove("open");
+    }
+
+    async function saveTodo() {
+      const title = el("todoTitle").value.trim();
+      if (!title) {
+        alert("할 일 제목을 입력해주세요.");
+        return;
+      }
+
+      await fetchJson(`/students/${studentId}/todos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          due_date: el("todoDate").value,
+          title,
+          description: el("todoDesc").value || null,
+          category: el("todoSubject").value || "학습",
+          priority: 50
+        })
+      });
+
+      closeTodoModal();
+      selectedTodoDate = el("todoDate").value;
+      await loadTodo();
+    }
+
+    async function loadAll() {
+      await loadRoadmap();
+      loadProfile();
+      await loadTodo();
+    }
+
+    loadAll();
+  </script>
+</body>
+</html>
