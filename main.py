@@ -8,7 +8,6 @@ from db import engine, sql_loader
 from router.item_router import router as item_router
 from router.roadmap_router import router as roadmap_router
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # [서버 시작 시] mappers 디렉토리 내의 XML 파일 전체 로드
@@ -20,6 +19,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan, title='수플레')
 app.include_router(item_router)
 app.include_router(roadmap_router)
+
 app.mount('/', StaticFiles(directory='web', html=True), name='root')
 
 
